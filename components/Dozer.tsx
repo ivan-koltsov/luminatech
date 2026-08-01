@@ -6,53 +6,64 @@ import { Group } from 'three';
 
 export default function Dozer() {
   const dozerRef = useRef<Group>(null);
-  const [keys, setKeys] = useState({ w: false, a: false, s: false, d: false });
-
-  // Handle Keyboard Inputs
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => setKeys((k) => ({ ...k, [e.key.toLowerCase()]: true }));
-    const handleKeyUp = (e: KeyboardEvent) => setKeys((k) => ({ ...k, [e.key.toLowerCase()]: false }));
-
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  }, []);
-
-  // Movement Logic
+  // Autonomous Movement Logic for Demo
+  const timeRef = useRef(0);
+  
   useFrame((state, delta) => {
     if (!dozerRef.current) return;
-
-    const speed = 5 * delta;
-    const rotationSpeed = 2 * delta;
-
-    if (keys.w) dozerRef.current.translateZ(-speed);
-    if (keys.s) dozerRef.current.translateZ(speed);
-    if (keys.a) dozerRef.current.rotation.y += rotationSpeed;
-    if (keys.d) dozerRef.current.rotation.y -= rotationSpeed;
+    
+    timeRef.current += delta;
+    const speed = 3 * delta;
+    
+    // Move forward continuously
+    dozerRef.current.translateZ(-speed);
+    
+    // Gently steer left and right over time to create a curved path
+    dozerRef.current.rotation.y -= Math.sin(timeRef.current * 0.5) * 0.3 * delta;
   });
 
+
+
   return (
-    <group ref={dozerRef} position={[0, 0.5, 0]}>
-      {/* Dozer Body */}
-      <mesh position={[0, 0.5, 0]} castShadow>
-        <boxGeometry args={[2, 1, 3]} />
-        <meshStandardMaterial color="orange" />
+    <group ref={dozerRef} position={[0, 0, 0]}>
+      {/* Left Track */}
+      <mesh position={[-1.2, 0.4, 0]} castShadow>
+        <boxGeometry args={[0.6, 0.8, 3.5]} />
+        <meshStandardMaterial color="#1a202c" />
+      </mesh>
+      
+      {/* Right Track */}
+      <mesh position={[1.2, 0.4, 0]} castShadow>
+        <boxGeometry args={[0.6, 0.8, 3.5]} />
+        <meshStandardMaterial color="#1a202c" />
       </mesh>
 
-      {/* Dozer Blade */}
-      <mesh position={[0, 0.25, -1.7]} castShadow>
-        <boxGeometry args={[2.5, 1.2, 0.5]} />
-        <meshStandardMaterial color="darkgrey" />
+      {/* Main Body */}
+      <mesh position={[0, 0.8, -0.2]} castShadow>
+        <boxGeometry args={[1.8, 1.2, 2.8]} />
+        <meshStandardMaterial color="#eab308" />
       </mesh>
 
       {/* Cabin */}
-      <mesh position={[0, 1.25, 0.5]} castShadow>
-        <boxGeometry args={[1.5, 1, 1.5]} />
-        <meshStandardMaterial color="black" />
+      <mesh position={[0, 1.8, 0.5]} castShadow>
+        <boxGeometry args={[1.4, 1.2, 1.4]} />
+        <meshStandardMaterial color="#475569" />
+      </mesh>
+
+      {/* Blade Arms */}
+      <mesh position={[-1, 0.8, -1.8]} rotation={[0.2, 0, 0]} castShadow>
+        <boxGeometry args={[0.2, 0.2, 2]} />
+        <meshStandardMaterial color="#eab308" />
+      </mesh>
+      <mesh position={[1, 0.8, -1.8]} rotation={[0.2, 0, 0]} castShadow>
+        <boxGeometry args={[0.2, 0.2, 2]} />
+        <meshStandardMaterial color="#eab308" />
+      </mesh>
+
+      {/* Blade */}
+      <mesh position={[0, 0.6, -2.6]} castShadow>
+        <boxGeometry args={[3.2, 1.4, 0.4]} />
+        <meshStandardMaterial color="#94a3b8" />
       </mesh>
     </group>
   );
