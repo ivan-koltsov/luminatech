@@ -1,24 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './UIOverlay.module.css';
 
 export default function UIOverlay() {
+  const router = useRouter();
+  const [controlMode, setControlMode] = useState('AUTONOMY');
+  const [isRunning, setIsRunning] = useState(false);
+  const [taskProgress, setTaskProgress] = useState(100);
+
   return (
     <div className={styles.overlay}>
       {/* Top Bar */}
       <div className={styles.topBar}>
         <div className={styles.topLeft}>
           <div className={styles.logo}>LUMINA</div>
-          <div className={styles.statusPill}>
-            <div className={styles.dot}></div>
-            STOPPED
-          </div>
+          {isRunning ? (
+            <div className={styles.statusPill} style={{ color: '#22c55e', borderColor: '#22c55e', backgroundColor: '#f0fdf4' }}>
+              <div className={styles.dot} style={{ background: '#22c55e' }}></div>
+              RUNNING
+            </div>
+          ) : (
+            <div className={styles.statusPill}>
+              <div className={styles.dot}></div>
+              STOPPED
+            </div>
+          )}
           <div className={styles.locationInfo}>
             <div className={styles.locationName}>Bussigny Logistics Pad</div>
             <div className={styles.locationDetail}>DZ-01 &middot; Cat D8T</div>
           </div>
         </div>
-        <div className={styles.topCenter}>
-          <div className={styles.clock}>11:42</div>
+        <div className={styles.topCenter} style={{ gap: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 500, color: '#64748b', cursor: 'pointer' }} onClick={() => router.push('/dashboard-overview')}>
+            <strong style={{color: 'inherit'}}>1</strong> Estimate
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 500, color: '#0f172a', background: '#f1f5f9', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer' }} onClick={() => router.push('/machine-simulation')}>
+            <strong style={{color: '#3b82f6'}}>2</strong> Plan / Simulate
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 500, color: '#64748b', cursor: 'pointer' }} onClick={() => router.push('/dashboard-details')}>
+            <strong style={{color: 'inherit'}}>3</strong> Progress
+          </div>
         </div>
         <div className={styles.topRight}>
           <div className={styles.statusIndicator}>
@@ -96,11 +117,11 @@ export default function UIOverlay() {
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div className={styles.label}>TASK PROGRESS</div>
-            <div style={{ fontSize: '14px', fontWeight: 'bold' }}>100%</div>
+            <div style={{ fontSize: '14px', fontWeight: 'bold' }}>{taskProgress}%</div>
           </div>
           
           <div className={styles.progressBarContainer}>
-            <div className={styles.progressBarFill} style={{ width: '100%' }}></div>
+            <div className={styles.progressBarFill} style={{ width: `${taskProgress}%` }}></div>
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '12px' }}>
@@ -145,25 +166,41 @@ export default function UIOverlay() {
           </div>
           
           <div className={styles.controlModes}>
-            <button className={styles.modeBtn}>
-              <div className={styles.dot} style={{ background: '#94a3b8' }}></div> MANUAL
+            <button className={`${styles.modeBtn} ${controlMode === 'MANUAL' ? styles.active : ''}`} onClick={() => setControlMode('MANUAL')}>
+              <div className={styles.dot} style={{ background: controlMode === 'MANUAL' ? 'white' : '#94a3b8' }}></div> MANUAL
             </button>
-            <button className={styles.modeBtn}>
-              <div className={styles.dot} style={{ background: '#d97706' }}></div> ASSISTED
+            <button className={`${styles.modeBtn} ${controlMode === 'ASSISTED' ? styles.active : ''}`} onClick={() => setControlMode('ASSISTED')}>
+              <div className={styles.dot} style={{ background: controlMode === 'ASSISTED' ? 'white' : '#d97706' }}></div> ASSISTED
             </button>
-            <button className={`${styles.modeBtn} ${styles.active}`}>
-              <div className={styles.dot} style={{ background: 'white' }}></div> AUTONOMY
+            <button className={`${styles.modeBtn} ${controlMode === 'AUTONOMY' ? styles.active : ''}`} onClick={() => setControlMode('AUTONOMY')}>
+              <div className={styles.dot} style={{ background: controlMode === 'AUTONOMY' ? 'white' : '#22c55e' }}></div> AUTONOMY
             </button>
           </div>
 
           <div className={styles.actionRow}>
-            <button className={styles.resumeBtn}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-              </svg>
-              RESUME
+            <button 
+              className={styles.resumeBtn} 
+              style={isRunning ? { background: '#ef4444' } : {}}
+              onClick={() => setIsRunning(!isRunning)}
+            >
+              {isRunning ? (
+                <>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="6" y="4" width="4" height="16"></rect>
+                    <rect x="14" y="4" width="4" height="16"></rect>
+                  </svg>
+                  PAUSE
+                </>
+              ) : (
+                <>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                  RESUME
+                </>
+              )}
             </button>
-            <button className={styles.nextTaskBtn}>
+            <button className={styles.nextTaskBtn} onClick={() => setTaskProgress(taskProgress < 100 ? taskProgress + 25 : 0)}>
               NEXT TASK &gt;
             </button>
           </div>

@@ -1,8 +1,18 @@
 'use client';
-import React from 'react';
+import React, { useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from '../../components/dashboard/Dashboard.module.css';
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const [activeStep, setActiveStep] = useState(1);
+  const [activeMetric, setActiveMetric] = useState<number | null>(null);
+  const [activeView, setActiveView] = useState('Isometric');
+  const [vertScale, setVertScale] = useState(1.0);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const isDragging = useRef(false);
+  const lastMousePos = useRef({ x: 0, y: 0 });
+
   return (
     <div className={styles.dashboard}>
       {/* Top Navigation */}
@@ -19,9 +29,15 @@ export default function DashboardPage() {
         </div>
 
         <div className={styles.navCenter}>
-          <div className={`${styles.navStep} ${styles.active}`}><strong style={{color: '#3b82f6'}}>1</strong> Estimate</div>
-          <div className={styles.navStep}><strong>2</strong> Plan / Simulate</div>
-          <div className={styles.navStep}><strong>3</strong> Progress</div>
+          <div className={`${styles.navStep} ${activeStep === 1 ? styles.active : ''}`} onClick={() => router.push('/dashboard-overview')} style={{cursor: 'pointer'}}>
+            <strong style={{color: activeStep === 1 ? '#3b82f6' : 'inherit'}}>1</strong> Estimate
+          </div>
+          <div className={`${styles.navStep} ${activeStep === 2 ? styles.active : ''}`} onClick={() => router.push('/machine-simulation')} style={{cursor: 'pointer'}}>
+            <strong style={{color: activeStep === 2 ? '#3b82f6' : 'inherit'}}>2</strong> Plan / Simulate
+          </div>
+          <div className={`${styles.navStep} ${activeStep === 3 ? styles.active : ''}`} onClick={() => router.push('/dashboard-details')} style={{cursor: 'pointer'}}>
+            <strong style={{color: activeStep === 3 ? '#3b82f6' : 'inherit'}}>3</strong> Progress
+          </div>
         </div>
 
         <div className={styles.navRight}>
@@ -45,57 +61,79 @@ export default function DashboardPage() {
           </div>
 
           <div className={styles.metricsRow}>
-            <div className={styles.metricCol}>
+            <div className={styles.metricCol} style={activeMetric === 1 ? { background: '#f8fafc', cursor: 'pointer' } : { cursor: 'pointer' }} onClick={() => setActiveMetric(1)}>
               <div className={styles.headerSubtitle}>BID TOTAL</div>
               <div className={styles.headerTitle} style={{marginBottom: '4px', fontWeight: 700}}>$1.05M</div>
               <div className={styles.headerDesc} style={{fontSize: '12px'}}>$833k direct cost</div>
             </div>
-            <div className={styles.metricCol}>
+            <div className={styles.metricCol} style={activeMetric === 2 ? { background: '#f8fafc', cursor: 'pointer' } : { cursor: 'pointer' }} onClick={() => setActiveMetric(2)}>
               <div className={styles.headerSubtitle}>MATERIAL MOVED</div>
               <div className={styles.headerTitle} style={{marginBottom: '4px', fontWeight: 700}}>43k m&sup3;</div>
               <div className={styles.headerDesc} style={{fontSize: '12px'}}>23k m&sup3; cut + 21k m&sup3; import</div>
             </div>
-            <div className={styles.metricCol}>
+            <div className={styles.metricCol} style={activeMetric === 3 ? { background: '#f8fafc', cursor: 'pointer' } : { cursor: 'pointer' }} onClick={() => setActiveMetric(3)}>
               <div className={styles.headerSubtitle}>DURATION</div>
               <div className={styles.headerTitle} style={{marginBottom: '4px', fontWeight: 700}}>31 days</div>
               <div className={styles.headerDesc} style={{fontSize: '12px'}}>309 work hours</div>
             </div>
-            <div className={styles.metricCol}>
+            <div className={styles.metricCol} style={activeMetric === 4 ? { background: '#f8fafc', cursor: 'pointer' } : { cursor: 'pointer' }} onClick={() => setActiveMetric(4)}>
               <div className={styles.headerSubtitle}>RISK SCORE</div>
               <div className={styles.headerTitle} style={{marginBottom: '4px', fontWeight: 700}}>22 / 100</div>
               <div className={styles.headerDesc} style={{fontSize: '12px'}}>inside normal band</div>
             </div>
-            <div className={styles.metricCol}>
+            <div className={styles.metricCol} style={activeMetric === 5 ? { background: '#f8fafc', cursor: 'pointer' } : { cursor: 'pointer' }} onClick={() => setActiveMetric(5)}>
               <div className={styles.headerSubtitle}>BALANCE</div>
               <div className={styles.headerTitle} style={{marginBottom: '4px', fontWeight: 700}}>21k m&sup3; import</div>
               <div className={styles.headerDesc} style={{fontSize: '12px'}}>43k m&sup3; fill demand</div>
             </div>
           </div>
 
-          <div className={styles.mapViewport}>
+          <div 
+            className={styles.mapViewport}
+            onMouseDown={(e) => {
+              isDragging.current = true;
+              lastMousePos.current = { x: e.clientX, y: e.clientY };
+            }}
+            onMouseMove={(e) => {
+              if (isDragging.current) {
+                const dx = e.clientX - lastMousePos.current.x;
+                const dy = e.clientY - lastMousePos.current.y;
+                setPan(p => ({ x: p.x + dx, y: p.y + dy }));
+                lastMousePos.current = { x: e.clientX, y: e.clientY };
+              }
+            }}
+            onMouseUp={() => isDragging.current = false}
+            onMouseLeave={() => isDragging.current = false}
+            style={{ cursor: isDragging.current ? 'grabbing' : 'grab' }}
+          >
             {/* View Toggles */}
-            <div className={styles.viewToggles}>
-              <button className={`${styles.toggleBtn} ${styles.active}`}>Isometric</button>
-              <button className={styles.toggleBtn}>Elevation 3D</button>
-              <button className={styles.toggleBtn}>Cut / fill</button>
-              <button className={styles.toggleBtn}>Section</button>
+            <div className={styles.viewToggles} style={{ zIndex: 10 }}>
+              {['Isometric', 'Elevation 3D', 'Cut / fill', 'Section'].map(view => (
+                <button 
+                  key={view}
+                  className={`${styles.toggleBtn} ${activeView === view ? styles.active : ''}`}
+                  onClick={() => setActiveView(view)}
+                >
+                  {view}
+                </button>
+              ))}
             </div>
 
             {/* Map Controls */}
-            <div className={styles.mapControls}>
+            <div className={styles.mapControls} style={{ zIndex: 10 }}>
               <div className={styles.zoomBtns}>
-                <button className={styles.zoomBtn}>+</button>
-                <button className={styles.zoomBtn}>&minus;</button>
+                <button className={styles.zoomBtn} onClick={() => setVertScale(s => Math.min(5.0, s + 0.1))}>+</button>
+                <button className={styles.zoomBtn} onClick={() => setVertScale(s => Math.max(0.1, s - 0.1))}>&minus;</button>
               </div>
               <div className={styles.vertScaleRow}>
                 <span>VERT. SCALE</span>
-                <span style={{color: '#0f172a'}}>1.0&times;</span>
+                <span style={{color: '#0f172a'}}>{vertScale.toFixed(1)}&times;</span>
               </div>
               <div style={{height: '6px', background: '#e2e8f0', borderRadius: '3px', position: 'relative'}}>
-                <div style={{position: 'absolute', top: 0, bottom: 0, left: 0, width: '40%', background: '#3b82f6', borderRadius: '3px'}}></div>
-                <div style={{position: 'absolute', top: '-4px', left: '40%', width: '14px', height: '14px', background: '#3b82f6', borderRadius: '50%', transform: 'translateX(-50%)'}}></div>
+                <div style={{position: 'absolute', top: 0, bottom: 0, left: 0, width: `${(vertScale / 5.0) * 100}%`, background: '#3b82f6', borderRadius: '3px'}}></div>
+                <div style={{position: 'absolute', top: '-4px', left: `${(vertScale / 5.0) * 100}%`, width: '14px', height: '14px', background: '#3b82f6', borderRadius: '50%', transform: 'translateX(-50%)'}}></div>
               </div>
-              <button className={styles.resetBtn}>Reset</button>
+              <button className={styles.resetBtn} onClick={() => { setActiveView('Isometric'); setVertScale(1.0); setPan({ x: 0, y: 0 }); }}>Reset</button>
               <div className={styles.controlHint}>Drag to rotate &middot; scroll to zoom</div>
             </div>
 
@@ -103,17 +141,20 @@ export default function DashboardPage() {
             <div style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
               <div style={{
                 width: '80%', height: '80%',
-                background: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'800\' height=\'400\'%3E%3Cpath d=\'M400 50 L750 200 L400 350 L50 200 Z\' fill=\'%23e2e8f0\'/%3E%3Cpath d=\'M300 150 Q 400 100 500 200 T 600 250 Q 500 300 400 250 T 200 200 Z\' fill=\'%23ea580c\' opacity=\'0.8\'/%3E%3Cpath d=\'M500 200 Q 600 150 700 200 T 550 300 Z\' fill=\'%233b82f6\' opacity=\'0.6\'/%3E%3C/svg%3E") center/contain no-repeat'
+                background: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'800\' height=\'400\'%3E%3Cpath d=\'M400 50 L750 200 L400 350 L50 200 Z\' fill=\'%23e2e8f0\'/%3E%3Cpath d=\'M300 150 Q 400 100 500 200 T 600 250 Q 500 300 400 250 T 200 200 Z\' fill=\'%23ea580c\' opacity=\'0.8\'/%3E%3Cpath d=\'M500 200 Q 600 150 700 200 T 550 300 Z\' fill=\'%233b82f6\' opacity=\'0.6\'/%3E%3C/svg%3E") center/contain no-repeat',
+                transform: `translate(${pan.x}px, ${pan.y}px) scale(${vertScale}) ${activeView === 'Elevation 3D' ? 'rotateX(20deg) translateY(-20px)' : activeView === 'Section' ? 'scaleY(0.4)' : activeView === 'Cut / fill' ? 'scale(1.1)' : ''}`,
+                filter: activeView === 'Cut / fill' ? 'hue-rotate(180deg) saturate(2)' : 'none',
+                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
               }}></div>
             </div>
 
             {/* Floating Panels Inside Map */}
-            <div className={`${styles.floatingPanel} ${styles.mapFloatBottomLeft}`}>
+            <div className={`${styles.floatingPanel} ${styles.mapFloatBottomLeft}`} style={{ zIndex: 10 }}>
               <div style={{fontSize: '10px', fontWeight: 700, color: '#64748b', letterSpacing: '0.5px', marginBottom: '4px'}}>QUANTITY SURFACE</div>
               <div style={{fontSize: '18px', fontWeight: 700}}>swissALTI3D 2021</div>
             </div>
             
-            <div className={`${styles.floatingPanel} ${styles.mapFloatBottomRight}`}>
+            <div className={`${styles.floatingPanel} ${styles.mapFloatBottomRight}`} style={{ zIndex: 10 }}>
               <div style={{fontSize: '10px', fontWeight: 700, color: '#64748b', letterSpacing: '0.5px', marginBottom: '8px'}}>CUT / FILL (M)</div>
               <div style={{display: 'flex', flexWrap: 'wrap', gap: '16px', fontSize: '12px', color: '#64748b'}}>
                 <div style={{display: 'flex', alignItems: 'center', gap: '6px'}}>

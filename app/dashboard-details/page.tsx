@@ -1,8 +1,13 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from '../../components/dashboard/Dashboard.module.css';
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const [activeStep, setActiveStep] = useState(3);
+  const [activeZone, setActiveZone] = useState<number | null>(null);
+
   return (
     <div className={styles.dashboard}>
       {/* Top Navigation */}
@@ -19,9 +24,15 @@ export default function DashboardPage() {
         </div>
 
         <div className={styles.navCenter}>
-          <div className={`${styles.navStep} ${styles.active}`}><strong style={{color: '#3b82f6'}}>1</strong> Estimate</div>
-          <div className={styles.navStep}><strong>2</strong> Plan / Simulate</div>
-          <div className={styles.navStep}><strong>3</strong> Progress</div>
+          <div className={`${styles.navStep} ${activeStep === 1 ? styles.active : ''}`} onClick={() => router.push('/dashboard-overview')} style={{cursor: 'pointer'}}>
+            <strong style={{color: activeStep === 1 ? '#3b82f6' : 'inherit'}}>1</strong> Estimate
+          </div>
+          <div className={`${styles.navStep} ${activeStep === 2 ? styles.active : ''}`} onClick={() => router.push('/machine-simulation')} style={{cursor: 'pointer'}}>
+            <strong style={{color: activeStep === 2 ? '#3b82f6' : 'inherit'}}>2</strong> Plan / Simulate
+          </div>
+          <div className={`${styles.navStep} ${activeStep === 3 ? styles.active : ''}`} onClick={() => router.push('/dashboard-details')} style={{cursor: 'pointer'}}>
+            <strong style={{color: activeStep === 3 ? '#3b82f6' : 'inherit'}}>3</strong> Progress
+          </div>
         </div>
 
         <div className={styles.navRight}>
@@ -253,7 +264,11 @@ export default function DashboardPage() {
               <div className={styles.panelSubtitle}>balanced</div>
             </div>
 
-            <div className={styles.qtyItem}>
+            <div 
+              className={styles.qtyItem} 
+              style={activeZone === 1 ? { borderLeft: '3px solid #3b82f6', background: '#f8fafc' } : { cursor: 'pointer' }}
+              onClick={() => setActiveZone(1)}
+            >
               <div>
                 <div className={styles.qtyTitle}>Z1 &middot; Northwest cut</div>
                 <div className={styles.qtySub}>Silty clay &middot; 92% confidence</div>
@@ -261,7 +276,11 @@ export default function DashboardPage() {
               <div className={`${styles.qtyVal} ${styles.cut}`}>2k m&sup3;</div>
             </div>
 
-            <div className={styles.qtyItem}>
+            <div 
+              className={styles.qtyItem}
+              style={activeZone === 2 ? { borderLeft: '3px solid #3b82f6', background: '#f8fafc' } : { cursor: 'pointer' }}
+              onClick={() => setActiveZone(2)}
+            >
               <div>
                 <div className={styles.qtyTitle}>Z2 &middot; North ridge</div>
                 <div className={styles.qtySub}>Weathered sandstone &middot; 88% confidence</div>
@@ -269,7 +288,11 @@ export default function DashboardPage() {
               <div className={`${styles.qtyVal} ${styles.cut}`}>10k m&sup3;</div>
             </div>
 
-            <div className={styles.qtyItem}>
+            <div 
+              className={styles.qtyItem}
+              style={activeZone === 3 ? { borderLeft: '3px solid #3b82f6', background: '#f8fafc' } : { cursor: 'pointer' }}
+              onClick={() => setActiveZone(3)}
+            >
               <div>
                 <div className={styles.qtyTitle}>Z3 &middot; Central pad</div>
                 <div className={styles.qtySub}>Engineered fill &middot; 95% confidence</div>
@@ -277,7 +300,11 @@ export default function DashboardPage() {
               <div className={`${styles.qtyVal} ${styles.fill}`}>31k m&sup3;</div>
             </div>
 
-            <div className={styles.qtyItem}>
+            <div 
+              className={styles.qtyItem}
+              style={activeZone === 4 ? { borderLeft: '3px solid #3b82f6', background: '#f8fafc' } : { cursor: 'pointer' }}
+              onClick={() => setActiveZone(4)}
+            >
               <div>
                 <div className={styles.qtyTitle}>Z4 &middot; Southeast fill</div>
                 <div className={styles.qtySub}>Engineered fill &middot; 93% confidence</div>
@@ -285,7 +312,11 @@ export default function DashboardPage() {
               <div className={`${styles.qtyVal} ${styles.fill}`}>3k m&sup3;</div>
             </div>
 
-            <div className={styles.qtyItem}>
+            <div 
+              className={styles.qtyItem}
+              style={activeZone === 5 ? { borderLeft: '3px solid #3b82f6', background: '#f8fafc' } : { cursor: 'pointer' }}
+              onClick={() => setActiveZone(5)}
+            >
               <div>
                 <div className={styles.qtyTitle}>Z5 &middot; Access ramp</div>
                 <div className={styles.qtySub}>Granular base &middot; 90% confidence</div>
@@ -293,7 +324,11 @@ export default function DashboardPage() {
               <div className={`${styles.qtyVal} ${styles.fill}`}>5k m&sup3;</div>
             </div>
 
-            <div className={styles.qtyItem}>
+            <div 
+              className={styles.qtyItem}
+              style={activeZone === 6 ? { borderLeft: '3px solid #3b82f6', background: '#f8fafc' } : { cursor: 'pointer' }}
+              onClick={() => setActiveZone(6)}
+            >
               <div>
                 <div className={styles.qtyTitle}>Z6 &middot; Pond excavation</div>
                 <div className={styles.qtySub}>Lean clay &middot; 85% confidence</div>
