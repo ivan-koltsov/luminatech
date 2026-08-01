@@ -1,0 +1,411 @@
+.dashboard {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1e293b;
+}
+
+/* --- Top Navigation --- */
+.topNav {
+  height: 64px;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+
+.navLeft {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 2px;
+  border-right: 1px solid #e2e8f0;
+  padding-right: 24px;
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.breadcrumbCurrent {
+  color: #0f172a;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navCenter {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.navStep {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navStep.active {
+  color: #0f172a;
+  background: #f1f5f9;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.healthPill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0fdf4;
+  color: #166534;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-weight: 600;
+  border: 1px solid #bbf7d0;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* --- Main Layout --- */
+.mainContainer {
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* --- Panel Shared Styles --- */
+.panel {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.02);
+  border: 1px solid #f1f5f9;
+  padding: 24px;
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.panelTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.panelSubtitle {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* --- Cost Composition --- */
+.costRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.costLabel {
+  width: 140px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
+}
+
+.costBarContainer {
+  flex: 1;
+  height: 12px;
+  background: #f1f5f9;
+  border-radius: 2px;
+  margin: 0 16px;
+  overflow: hidden;
+}
+
+.costBar {
+  height: 100%;
+}
+
+.costValue {
+  width: 60px;
+  text-align: right;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.bidTotal {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.bidTotalLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.bidTotalDesc {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.bidTotalValue {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1;
+}
+
+/* --- Equipment Chain --- */
+.chainItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.chainIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  margin-right: 16px;
+}
+
+.chainInfo {
+  flex: 1;
+}
+
+.chainTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.chainSub {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.chainRate {
+  font-size: 16px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.systemRate {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* --- Risk Register --- */
+.riskItem {
+  display: flex;
+  align-items: flex-start;
+  padding: 16px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.riskItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.riskSeverity {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  margin-right: 16px;
+  margin-top: 2px;
+}
+
+.riskSeverity.high { background: #b91c1c; }
+.riskSeverity.med { background: #c2410c; }
+.riskSeverity.low { background: #b45309; }
+
+.riskInfo {
+  flex: 1;
+}
+
+.riskTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.riskDesc {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.riskImpact {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* --- Source Ground Truth --- */
+.imageGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 24px;
+}
+
+.thumb {
+  width: 100%;
+  aspect-ratio: 1;
+  background: #cbd5e1;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.statBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.statLabel {
+  font-size: 10px;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.statValue {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.statSub {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+/* --- Quantity Register --- */
+.qtyItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.qtyItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.qtyTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.qtySub {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.qtyVal {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.qtyVal.cut { color: #ea580c; }
+.qtyVal.fill { color: #2563eb; }
+
+/* Top floating panels */
+.floatingHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 24px;
+  align-items: flex-start;
+  margin-bottom: -16px;
+}
+
+.floatingPanel {
+  background: white;
+  border-radius: 8px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
