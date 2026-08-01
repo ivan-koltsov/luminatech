@@ -409,3 +409,168 @@
   padding: 12px 16px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
+
+/* --- Top Dashboard Section --- */
+.dashboardHeader {
+  margin-bottom: 32px;
+}
+
+.headerSubtitle {
+  font-size: 10px;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.headerTitle {
+  font-size: 28px;
+  font-weight: 400;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.headerDesc {
+  font-size: 14px;
+  color: #64748b;
+  max-width: 800px;
+  line-height: 1.5;
+}
+
+.metricsRow {
+  display: flex;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 24px;
+}
+
+.metricCol {
+  flex: 1;
+  padding: 24px 0;
+  border-right: 1px solid #e2e8f0;
+}
+
+.metricCol:first-child {
+  padding-left: 0;
+}
+
+.metricCol:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+
+.metricCol:not(:first-child) {
+  padding-left: 32px;
+}
+
+.mapViewport {
+  height: 500px;
+  background: #f1f5f9;
+  border-radius: 12px;
+  position: relative;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.viewToggles {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  display: flex;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  padding: 4px;
+}
+
+.toggleBtn {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.toggleBtn.active {
+  background: #0f172a;
+  color: white;
+}
+
+.mapControls {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  padding: 16px;
+  width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.zoomBtns {
+  display: flex;
+  gap: 8px;
+}
+
+.zoomBtn {
+  flex: 1;
+  height: 32px;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vertScaleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.resetBtn {
+  width: 100%;
+  padding: 8px;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+  cursor: pointer;
+}
+
+.controlHint {
+  font-size: 10px;
+  color: #94a3b8;
+  text-align: center;
+  margin-top: -4px;
+}
+
+/* Floating bottom panels inside map */
+.mapFloatBottomLeft {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+}
+
+.mapFloatBottomRight {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+}
