@@ -1,25 +1,82 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Group } from 'three';
+import { useMachine } from './MachineContext';
 
 export default function Dozer() {
   const dozerRef = useRef<Group>(null);
-  // Autonomous Movement Logic for Demo
   const timeRef = useRef(0);
+  
+  const { isRunning, controlMode, setSpeed, setHeading } = useMachine();
+  
+  // Track keys for manual mode
+  const keys = useRef({ w: false, a: false, s: false, d: false });
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const key = e.key.toLowerCase();
+      if (keys.current.hasOwnProperty(key)) {
+        keys.current[key as keyof typeof keys.current] = true;
+      }
+    };
+    const handleKeyUp = (e: KeyboardEvent) => {
+      const key = e.key.toLowerCase();
+      if (keys.current.hasOwnProperty(key)) {
+        keys.current[key as keyof typeof keys.current] = false;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
   
   useFrame((state, delta) => {
     if (!dozerRef.current) return;
     
-    timeRef.current += delta;
-    const speed = 3 * delta;
+    let currentSpeed = 0;
     
-    // Move forward continuously
-    dozerRef.current.translateZ(-speed);
+    if (controlMode === 'MANUAL') {
+      const moveSpeed = 4 * delta;
+      const turnSpeed = 1.5 * delta;
+      
+      if (keys.current.w) {
+        dozerRef.current.translateZ(-moveSpeed);
+        currentSpeed = 4;
+      }
+      if (keys.current.s) {
+        dozerRef.current.translateZ(moveSpeed);
+        currentSpeed = -4;
+      }
+      if (keys.current.a) {
+        dozerRef.current.rotation.y += turnSpeed;
+      }
+      if (keys.current.d) {
+        dozerRef.current.rotation.y -= turnSpeed;
+      }
+    } else if (isRunning && (controlMode === 'AUTONOMY' || controlMode === 'ASSISTED')) {
+      timeRef.current += delta;
+      const moveSpeed = 3 * delta;
+      
+      dozerRef.current.translateZ(-moveSpeed);
+      dozerRef.current.rotation.y -= Math.sin(timeRef.current * 0.5) * 0.3 * delta;
+      currentSpeed = 3;
+    }
     
-    // Gently steer left and right over time to create a curved path
-    dozerRef.current.rotation.y -= Math.sin(timeRef.current * 0.5) * 0.3 * delta;
+    // Update context state for the UI
+    setSpeed(Math.abs(Math.round(currentSpeed * 3.6 * 10) / 10));
+    
+    // Convert radians to degrees for heading
+    const headingDeg = (dozerRef.current.rotation.y * 180 / Math.PI) % 360;
+    let compassHeading = -headingDeg; 
+    if (compassHeading < 0) compassHeading += 360;
+    setHeading(Math.round(compassHeading));
   });
 
 

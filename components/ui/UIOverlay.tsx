@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './UIOverlay.module.css';
+import { useMachine } from '../MachineContext';
 
 export default function UIOverlay() {
   const router = useRouter();
-  const [controlMode, setControlMode] = useState('AUTONOMY');
-  const [isRunning, setIsRunning] = useState(false);
-  const [taskProgress, setTaskProgress] = useState(100);
+  const { isRunning, setIsRunning, controlMode, setControlMode, speed, heading, taskProgress, setTaskProgress } = useMachine();
 
   return (
     <div className={styles.overlay}>
@@ -218,12 +217,14 @@ export default function UIOverlay() {
           <div className={styles.stateGrid}>
             <div>
               <div className={styles.label}>GROUND SPEED</div>
-              <div className={styles.stateVal}>0.0 <span className={styles.stateUnit}>km/h</span></div>
+              <div className={styles.stateVal}>{speed.toFixed(1)} <span className={styles.stateUnit}>km/h</span></div>
             </div>
             <div>
               <div className={styles.label}>HEADING</div>
-              <div className={styles.stateVal}>244&deg;</div>
-              <div style={{ fontSize: '12px', color: '#666', marginTop: '-4px' }}>SW</div>
+              <div className={styles.stateVal}>{heading}&deg;</div>
+              <div style={{ fontSize: '12px', color: '#666', marginTop: '-4px' }}>
+                {heading >= 315 || heading < 45 ? 'N' : heading >= 45 && heading < 135 ? 'E' : heading >= 135 && heading < 225 ? 'S' : 'W'}
+              </div>
             </div>
             <div>
               <div className={styles.label}>BLADE LOAD</div>
